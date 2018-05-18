@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN" ng-app="share">
+
+<head>
+    <meta charset='utf-8' />
+    <script src="http://cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
+
+    <script type="text/javascript">
+
+        all=[
+            {
+                name: 'yy',
+                label: '2.1接口',
+                rq_url:'http://10.208.56.6:8006/manainf/services/infoService',
+                fields: ['USER_NAME','PASSWD','ENTY_TYPE','ENTY_TYPE']
+            },
+            {
+                name: 'bb',
+                label: 'bb',
+                fields: ['jj'],
+            },
+
+            ]
+
+
+
+
+        $(function () {
+
+
+            new Vue({
+                el:'#there',
+                data:{
+                    all:all,
+                    crt:all[0],
+                    dd:{}
+                },
+                methods:{
+                    cor_get:function(){
+                        alert(this.dd)
+                    }
+                },
+                computed:{
+                    field_str:{
+                        get:function(){
+                            return this.crt.fields.join(';')
+                        },
+                        set:function(v){
+                            this.crt.fields = v.split(';')
+                        }
+                    }
+                }
+            })
+        })
+
+
+    </script>
+
+
+</head>
+<body>
+
+<div id="there" class="test" style="margin-top: 2em">
+   <ul style="width: 100px;float: left;">
+       <li v-for="f in all">
+           <span v-text="f.label" @click="crt=f"></span>
+       </li>
+   </ul>
+
+
+    <div style="margin-left: 120px;margin-top: 2em;" >
+        <span>字段设置</span>
+        <textarea name="" id="" cols="30" rows="10" v-model="field_str" style="height: 50px;width: 400px"></textarea>
+        <br>
+        <span>请求地址</span><input type="text" v-model="crt.rq_url" style="width: 500px"><button @click='cor_get()'>请求</button>
+        <br>
+        <hr>
+        <div v-for="field in crt.fields">
+            <span v-text="field" style="width: 100px;display: inline-block;"></span>
+            <input type="text" v-model="dd[field]">
+        </div>
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

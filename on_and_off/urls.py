@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-
+from call_api import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'callapi/?$',views.call_api_page)
 ]
