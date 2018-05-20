@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
     <script src="https://cdn.bootcss.com/vue/2.2.6/vue.js"></script>
+    <script src="https://cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.min.js"></script>
+    <script src="https://cdn.bootcss.com/layer/3.1.0/layer.js"></script>
 
     <script type="text/javascript">
 
@@ -16,12 +18,13 @@
                 name: 'yy',
                 label: '2.1接口',
                 rq_url:'http://10.208.56.6:8006/manainf/services/infoService',
-                fields: ['USER_NAME','PASSWD','ENTY_TYPE','ENTY_TYPE']
+                fields: ['USER_NAME','PASSWD','ENTY_TYPE','ENTY_TYPE','ENT_UUID','UNI_SCID','REG_NO','ENTY_NAME','CER_NO','PERSON_NAME','START_DATE','END_DATE']
             },
             {
                 name: 'bb',
-                label: 'bb',
-                fields: ['jj'],
+                label: '2.2接口',
+                rq_url:'http://10.208.56.6:8006/manainf/services/infoService',
+                fields: ['USER_NAME','PASSWD','ENTY_TYPE','ENT_UUID','UNI_SCID','REG_NO','ENTY_NAME','CER_NO','PERSON_NAME'],
             },
 
             ]
@@ -37,14 +40,30 @@
                 data:{
                     all:all,
                     crt:all[0],
-                    dd:{}
+                    dd:{},
+                    md5_text:'',
+                    rt_msg:''
                 },
                 methods:{
                     cor_get:function(){
-                        alert(this.dd)
+                        var dc ={
+                            rq_url:this.crt.rq_url,
+                            fields:this.crt.fields,
+                            row:this.dd
+                        }
+                        var self=this
+                        var index = layer.load(2)
+                        $.post('',JSON.stringify(dc),function(resp){
+                            layer.close(index)
+                            self.rt_msg = resp
+                        })
                     }
                 },
                 computed:{
+                    md5_changed:function(){
+                        var hash = md5(this.md5_text);
+                        return hash
+                    },
                     field_str:{
                         get:function(){
                             return this.crt.fields.join(';')
@@ -73,8 +92,12 @@
 
 
     <div style="margin-left: 120px;margin-top: 2em;" >
+        <span>MD5</span>
+        <input type="text" v-model="md5_text">
+        <span v-text="md5_changed"></span>
+        <hr>
         <span>字段设置</span>
-        <textarea name="" id="" cols="30" rows="10" v-model="field_str" style="height: 50px;width: 400px"></textarea>
+        <textarea name="" id="" cols="30" rows="10" v-model="field_str" style="min-height: 70px;min-width: 400px"></textarea>
         <br>
         <span>请求地址</span><input type="text" v-model="crt.rq_url" style="width: 500px"><button @click='cor_get()'>请求</button>
         <br>
@@ -83,6 +106,12 @@
             <span v-text="field" style="width: 100px;display: inline-block;"></span>
             <input type="text" v-model="dd[field]">
         </div>
+        <hr>
+        <div>
+            <span>返回信息</span>
+            <pre v-text="rt_msg"></pre>
+        </div>
+
     </div>
 
 
