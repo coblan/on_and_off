@@ -28,4 +28,12 @@ def call_api_page(request):
             'rt':out
         }
         return HttpResponse(content=json.dumps(dc),content_type="application/json")
+    
+@csrf_exempt
+def test_post(request):
+    print('='*20)
+    print(request.method)
+    print(request.body)
+    return HttpResponse('OK')
+
         
