@@ -26,7 +26,7 @@ def call_api_page(request):
             out = 'Exception : %s'%str(e)
         dc={
             'xml':xml,
-            'rt':out
+            'rt':out.decode('utf-8')
         }
         return HttpResponse(content=json.dumps(dc),content_type="application/json")
         
