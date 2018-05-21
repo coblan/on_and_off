@@ -19,7 +19,7 @@ def call_api_page(request):
         try:
             rt = requests.post(dc.get('rq_url'),data=xml)
             if rt.status_code == 200:
-                return HttpResponse(rt.context)
+                return HttpResponse(rt.content)
             else:
                 return HttpResponse('error code is %s'%rt.status_code)
         except requests.exceptions.RequestException as e:
