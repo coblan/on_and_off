@@ -42,6 +42,7 @@
                     crt:all[0],
                     dd:{},
                     md5_text:'',
+                    gen_xml:'',
                     rt_msg:''
                 },
                 methods:{
@@ -55,7 +56,8 @@
                         var index = layer.load(2)
                         $.post('',JSON.stringify(dc),function(resp){
                             layer.close(index)
-                            self.rt_msg = resp
+                            self.rt_msg = resp.rt
+                            self.gen_xml = resp.xml
                         })
                     }
                 },
@@ -105,6 +107,11 @@
         <div v-for="field in crt.fields">
             <span v-text="field" style="width: 100px;display: inline-block;"></span>
             <input type="text" v-model="dd[field]">
+        </div>
+        <hr>
+        <div>
+            <span>生成的XML</span>
+            <pre v-text="gen_xml"></pre>
         </div>
         <hr>
         <div>

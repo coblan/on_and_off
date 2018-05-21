@@ -19,9 +19,14 @@ def call_api_page(request):
         try:
             rt = requests.post(dc.get('rq_url'),data=xml)
             if rt.status_code == 200:
-                return HttpResponse(rt.content)
+                out= rt.content
             else:
-                return HttpResponse('error code is %s'%rt.status_code)
+                out = 'error code is %s'%rt.status_code
         except requests.exceptions.RequestException as e:
-            return HttpResponse('Exception : %s'%str(e))
+            out = 'Exception : %s'%str(e)
+        dc={
+            'xml':xml,
+            'rt':out
+        }
+        return HttpResponse(content=json.dumps(dc),content_type="application/json")
         
