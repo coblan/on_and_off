@@ -10,7 +10,7 @@ def call_api_page(request):
     if request.method=='GET':
         return render(request,'call_api/index.html')
     else:
-        dc = json.loads(request.body)
+        dc = json.loads(request.body.decode('utf-8'))
         fields = dc.get('fields')
         row  = dc.get('row')
         normed_row = {f:row.get(f) for f in fields}
