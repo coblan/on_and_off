@@ -15,7 +15,7 @@ def call_api_page(request):
         row  = dc.get('row')
         normed_row = {f:row.get(f) for f in fields}
         xml = dicttoxml.dicttoxml(normed_row,custom_root='REQUEST')
-        
+        xml = xml.decode('utf-8')
         try:
             rt = requests.post(dc.get('rq_url'),data=xml)
             if rt.status_code == 200:
@@ -25,7 +25,7 @@ def call_api_page(request):
         except requests.exceptions.RequestException as e:
             out = 'Exception : %s'%str(e)
         dc={
-            'xml':xml.decode('utf-8'),
+            'xml':xml,
             'rt':out
         }
         return HttpResponse(content=json.dumps(dc),content_type="application/json")
