@@ -15,8 +15,9 @@ def call_api_page(request):
         row  = dc.get('row')
         normed_row = {f:row.get(f) for f in fields}
         xml = dicttoxml.dicttoxml(normed_row,custom_root='REQUEST',attr_type = False)
+        headers = {'Content-Type': 'application/xml'}
         try:
-            rt = requests.post(dc.get('rq_url'),data=xml)
+            rt = requests.post(dc.get('rq_url'),data=xml, headers = headers)
             if rt.status_code == 200:
                 out= rt.content.decode('utf-8')
             else:
