@@ -37,7 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'call_api'
+    'helpers.director', 
+    'helpers.authuser', 
+    'helpers.case.jb_admin', 
+    'call_api', 
+    'hello', 
+    'enterprise_case', 
 ]
 
 MIDDLEWARE = [
@@ -50,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'on_and_off.urls'
+ROOT_URLCONF = 'hello.urls'
 
 TEMPLATES = [
     {
@@ -69,7 +74,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'on_and_off.wsgi.application'
+WSGI_APPLICATION = 'hello.wsgi.application'
 
 
 # Database
@@ -121,3 +126,31 @@ USE_TZ = True
 ALLOWED_HOSTS=['10.235.80.248','localhost']
 
 STATIC_URL = '/static/'
+
+
+#LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'zh-hans'
+TIME_ZONE='Asia/Shanghai'
+#TIME_ZONE = 'UTC'
+USE_TZ = False
+
+# 优先使用app目录下的templates，这样更加便于开发
+STATICFILES_FINDERS=[
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+]
+
+# 区别collectstatic命令，赋予不同的static路径
+import sys
+if 'collectstatic' not in sys.argv:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, 'static').replace('\\', '/'),
+        # 因为资源服务器的暴露方式，所以要求用 /static/xxx的方式来访问 ckeditor的图片
+        os.path.join( os.path.dirname(BASE_DIR),'media','public')
+    )
+else:
+    STATIC_ROOT= os.path.join(BASE_DIR, 'static').replace('\\', '/')
+
+#
+MEDIA_ROOT= os.path.join( os.path.dirname(BASE_DIR),'media')
+MEDIA_URL = '/media/'

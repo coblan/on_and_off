@@ -5,7 +5,22 @@
 ##################################################################
 [project attributes]
 debug.launch-configs = (2,
-                        {'launch-lflLFcLwHU3HPUhM': ({},
+                        {'launch-I9TNz1T44QJq2pqt': ({},
+        {'buildcmd': ('project',
+                      None),
+         'env': ('project',
+                 [u'']),
+         'name': 'taskinfo',
+         'pyexec': ('project',
+                    u''),
+         'pypath': ('project',
+                    []),
+         'pyrunargs': ('project',
+                       '-u'),
+         'runargs': u'taskinfo -s 2018-08-01',
+         'rundir': ('project',
+                    u'')}),
+                         'launch-lflLFcLwHU3HPUhM': ({},
         {'buildcmd': ('project',
                       ('',
                        '')),
@@ -31,6 +46,9 @@ proj.directory-list = [{'dirloc': loc('.'),
 proj.file-type = 'shared'
 proj.launch-config = {loc('manage.py'): ('custom',
         (u'',
+         'launch-lflLFcLwHU3HPUhM')),
+                      loc('src/manage.py'): ('custom',
+        (u'',
          'launch-lflLFcLwHU3HPUhM'))}
-proj.main-file = loc('manage.py')
+proj.main-file = loc('src/manage.py')
 testing.test-framework = {loc('manage.py'): ':internal djangotest'}

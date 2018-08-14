@@ -13,11 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url,include
 from django.contrib import admin
 from call_api import views
+from hello.menu_engine import PcMenu
+from django.views.generic import RedirectView 
+from helpers.authuser.engin_view import AuthEngine
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^accounts/([\w\.]+)/?$',AuthEngine.as_view(),name=AuthEngine.url_name),
     url(r'callapi/?$',views.call_api_page),
     url(r'call/?$',views.test_post),
+    url(r'^pc/([\w\.]+)/?$',PcMenu.as_view(),name=PcMenu.url_name),
+    url(r'^d/',include('helpers.director.urls'),name='director'),
+    url(r'^$',RedirectView.as_view(url='/pc/home')) ,
 ]

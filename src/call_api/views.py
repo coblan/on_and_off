@@ -3,6 +3,9 @@ import requests
 import json
 from django.views.decorators.csrf import csrf_exempt
 import dicttoxml
+from django.conf import settings
+
+proxies = getattr(settings,'DATA_PROXY',{})
 # Create your views here.
 
 @csrf_exempt
@@ -17,7 +20,7 @@ def call_api_page(request):
         xml = dicttoxml.dicttoxml(normed_row,custom_root='REQUEST',attr_type = False)
         #headers = {'Content-Type': 'application/xml'}
         try:
-            rt = requests.post(dc.get('rq_url'),data= {'info': xml,})
+            rt = requests.post(dc.get('rq_url'),data= {'info': xml,}, proxies = proxies)
             if rt.status_code == 200:
                 out= rt.content.decode('utf-8')
             else:
