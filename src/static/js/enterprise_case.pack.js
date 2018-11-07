@@ -63,11 +63,29 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Vue.component('com-field-taskid', {
+    props: ['head', 'row'],
+    template: '<div>\n    <a v-text="row[head.name]" class="clickable" :href="mylink" target="_blank"></a>\n    </div>',
+    computed: {
+        mylink: function mylink() {
+            var taskid = this.row[this.head.name];
+            return ex.template(this.head.sango_link, { taskid: taskid });
+        }
+    }
+});
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -96,15 +114,19 @@ Vue.component('com-field-related-query', {
 });
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _related_query = __webpack_require__(0);
+var _related_query = __webpack_require__(1);
 
 var related_query = _interopRequireWildcard(_related_query);
+
+var _com_field_taskid = __webpack_require__(0);
+
+var com_field_taskid = _interopRequireWildcard(_com_field_taskid);
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 

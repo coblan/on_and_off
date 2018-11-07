@@ -19,6 +19,8 @@ from call_api import views
 from hello.menu_engine import PcMenu
 from django.views.generic import RedirectView 
 from helpers.authuser.engin_view import AuthEngine
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,3 +31,6 @@ urlpatterns = [
     url(r'^d/',include('helpers.director.urls'),name='director'),
     url(r'^$',RedirectView.as_view(url='/pc/home')) ,
 ]
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

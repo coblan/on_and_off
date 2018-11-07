@@ -9,14 +9,14 @@ from helpers.maintenance.update_static_timestamp import js_stamp
 
 class PcMenu(BaseEngine):
     url_name='EnterpriseCase'
-    brand='EnterpriseCase'
-    mini_brand='EC'
+    brand='事中事后'
+    mini_brand='系统'
     menu=[
         {'label':'主页','url':page('home'),'icon':fa('fa-home'), }, 
         {'label':'案件管理','icon':fa('fa-user-secret'),
          'submenu':[
              {'label':'案件列表','url':page('enterprise_case.caseadmin')},
-             {'label':'案件走势','url':page('inspector.inspector')},
+             #{'label':'案件走势','url':page('inspector.inspector')},
 
              ]},
          {'label':'重点监管','icon':fa('fa-user-secret'), 

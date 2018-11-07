@@ -26,6 +26,22 @@ class CasePage(TablePage):
                 {'name': 'ENT_NAME','label': '企业名称',}
             ]
         
+        def dict_head(self, head): 
+            dc = {
+                'taskid': 150,
+                'deptname': 140,
+                'address': 160,
+                'enterpriseinvoledname': 160,
+                'description': 200,
+                'ENT_NAME': 160,
+                'discovertime': 130,
+               
+            }
+            if dc.get(head['name']):
+                head['width'] = dc.get(head['name'])
+
+            return head
+        
         def dict_row(self, inst): 
             if inst.enterprise:
                 dc =  {
@@ -61,6 +77,9 @@ class CaseForm(ModelFields):
             #head['editor'] = 'com-field-pop-table-select'
             head['table_ctx'] = table_obj.get_head_context()
             head['options'] = []
+        if head['name'] == 'taskid':
+            head['editor'] = 'com-field-taskid' 
+            head['sango_link'] = 'http://10.231.18.25/CityGrid/caseoperate_flat/Chuli/HuiFuCase.aspx?TaskId={taskid}&categoryId=17A&solvingId=4377107&page=0&returnUrl=TaskInfoList.aspx?categoryId=17A&OpeBtnIds=btn020,btn016,btn019,'
         return head
     
     def save_form(self): 
