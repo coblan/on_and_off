@@ -79,7 +79,8 @@ class CaseForm(ModelFields):
             head['options'] = []
         if head['name'] == 'taskid':
             head['editor'] = 'com-field-taskid' 
-            head['sango_link'] = 'http://10.231.18.25/CityGrid/caseoperate_flat/Chuli/HuiFuCase.aspx?TaskId={taskid}&categoryId=17A&solvingId=4377107&page=0&returnUrl=TaskInfoList.aspx?categoryId=17A&OpeBtnIds=btn020,btn016,btn019,'
+            head['sango_link'] = 'http://10.231.18.25/CityGridtest/CaseOperate_flat/ParticularDisplayInfo.aspx?taskid={taskid}'
+            #head['sango_link'] = 'http://10.231.18.25/CityGrid/caseoperate_flat/Chuli/HuiFuCase.aspx?TaskId={taskid}&categoryId=17A&solvingId=4377107&page=0&returnUrl=TaskInfoList.aspx?categoryId=17A&OpeBtnIds=btn020,btn016,btn019,'
         return head
     
     def save_form(self): 
