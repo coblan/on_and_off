@@ -865,6 +865,10 @@ var _field_date = __webpack_require__(38);
 
 var field_date = _interopRequireWildcard(_field_date);
 
+var _field_single_select = __webpack_require__(108);
+
+var field_single_select2 = _interopRequireWildcard(_field_single_select);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 __webpack_require__(3);
@@ -4115,28 +4119,32 @@ var _filter_date = __webpack_require__(52);
 
 var filter_date = _interopRequireWildcard(_filter_date);
 
+var _filter_single_select = __webpack_require__(109);
+
+var filter_single_select2 = _interopRequireWildcard(_filter_single_select);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
-/**
- >5>front/table.rst>
+__webpack_require__(97); /**
+                                      >5>front/table.rst>
+                                     
+                                      table的过滤器
+                                      ============
+                                      ::
+                                     
+                                      class SalaryFilter(RowFilter):
+                                      names=['is_checked']
+                                      range_fields=[{'name':'month','type':'month'}]
+                                      model=SalaryRecords
+                                     
+                                     
+                                      <-<
+                                      */
 
- table的过滤器
- ============
- ::
-
- class SalaryFilter(RowFilter):
- names=['is_checked']
- range_fields=[{'name':'month','type':'month'}]
- model=SalaryRecords
-
-
- <-<
- */
-__webpack_require__(97);
 
 Vue.component('com-filter', {
     props: ['heads', 'search_args'],
-    template: '<div v-if=\'heads.length>0\' class="com-filter flex flex-grow flex-ac">\n                <div v-for="filter in heads" :id="\'filter-\'+filter.name" class="filter-item">\n                    <component @submit="m_submit()" :is="filter.editor" :head="filter" :search_args=\'search_args\' > </component>\n                </div>\n\n                <button name="go" type="button" class="btn btn-success btn-sm" @click=\'m_submit()\' >\n                  <i class="fa fa-search"></i>\n                  <span v-text="search_lable"></span>\n                </button>\n\n\n        </div>\n    ',
+    template: '<div v-if=\'heads.length>0\' class="com-filter flex flex-grow flex-ac">\n            <com-auto-more>\n                <div class="flex" style="flex-wrap: wrap">\n                     <div v-for="filter in heads" :id="\'filter-\'+filter.name" class="filter-item">\n                            <component @submit="m_submit()" :is="filter.editor" :head="filter" :search_args=\'search_args\' > </component>\n                        </div>\n                </div>\n            </com-auto-more>\n\n                <button name="go" type="button" class="btn btn-success btn-sm" @click=\'m_submit()\' >\n                  <i class="fa fa-search"></i>\n                  <span v-text="search_lable"></span>\n                </button>\n        </div>\n    ',
     created: function created() {
         var self = this;
         ex.each(self.heads, function (filter) {
@@ -4593,7 +4601,7 @@ exports = module.exports = __webpack_require__(0)();
 
 
 // module
-exports.push([module.i, ".filter-item {\n  margin: auto 0.3em; }\n\n.com-filter {\n  flex-wrap: wrap; }\n\n.row-filter .bootstrap-select {\n  min-width: 10em; }\n", ""]);
+exports.push([module.i, ".filter-item {\n  margin: auto 0.3em; }\n\n.row-filter .bootstrap-select {\n  min-width: 10em; }\n", ""]);
 
 // exports
 
@@ -4943,11 +4951,218 @@ var _main3 = __webpack_require__(4);
 
 var fields = _interopRequireWildcard(_main3);
 
+var _main4 = __webpack_require__(107);
+
+var uis_main = _interopRequireWildcard(_main4);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 __webpack_require__(22);
 __webpack_require__(21);
 __webpack_require__(23);
+
+/***/ }),
+/* 106 */,
+/* 107 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _auto_more = __webpack_require__(110);
+
+var auto_more = _interopRequireWildcard(_auto_more);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+__webpack_require__(114);
+
+/***/ }),
+/* 108 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var field_sigle_chosen = {
+    props: ['row', 'head'],
+    template: '<div  :style="head.style">\n    <select  class="select2 field-single-select2 form-control" >\n         <option  :value="undefined" ></option>\n        <option v-for="option in order_options" :value="option.value" v-text="option.label"></option>\n    </select>\n    </div>',
+    mounted: function mounted() {
+        var self = this;
+        ex.load_css('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css');
+        ex.load_js('https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js', function () {
+
+            $(self.$el).find('select').select2({
+                placeholder: self.head.placeholder,
+                allowClear: true
+            });
+            self.setValue(self.value);
+            $(self.$el).find('.select2').change(function (e) {
+                var value = $(self.$el).find('.select2').val();
+                if (value == '') {
+                    Vue.delete(self.row, self.head.name);
+                } else {
+                    Vue.set(self.row, self.head.name, value);
+                }
+            });
+        });
+    },
+    watch: {
+        //value:function(nv){
+        //    this.setValue(nv)
+        //}
+    },
+    computed: {
+        order_options: function order_options() {
+            if (this.head.order) {
+                return ex.sortOrder(this.head.options, 'label');
+            } else {
+                return this.head.options;
+            }
+        }
+    },
+    methods: {
+        setValue: function setValue(val) {
+            $(this.$el).find('.select2').val(val);
+            $(this.$el).find('.select2').trigger('change');
+            Vue.set(this.row, this.head.name, val);
+        }
+    }
+};
+
+Vue.component('com-field-single-select2', field_sigle_chosen);
+
+/***/ }),
+/* 109 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var com_select = {
+    props: ['head', 'search_args'],
+    template: '<com-field-single-select2 :head="head" :row="search_args"></com-field-single-select2>\n    '
+};
+
+Vue.component('com-filter-single-select2', com_select);
+
+/***/ }),
+/* 110 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+__webpack_require__(113);
+
+Vue.component('com-auto-more', {
+    data: function data() {
+        return {
+            expanded: false
+        };
+    }, //onmousewheel="return false;"
+    template: '<div class="com-auto-more" >\n        <div class="outer-wrap no-scroll-bar">\n            <div class="inn-wrap">\n                <slot></slot>\n            </div>\n        </div>\n\n        <div class="toggle-btn clickable" @click="toggle()">\n            <span v-if="expanded">\u6536\u8D77</span>\n            <span v-else>\u66F4\u591A</span>\n        </div>\n    </div>',
+    mounted: function mounted() {
+        if ($(this.$el).find('.inn-wrap').height() > $(this.$el).height()) {
+            $(this.$el).addClass('has-overflow');
+        }
+    },
+    methods: {
+        on_scroll: function on_scroll() {
+            return false;
+        },
+        toggle: function toggle() {
+            if (this.expanded) {
+                $(this.$el).find('.outer-wrap').css('height', '3rem');
+                $(this.$el).removeClass('expanded');
+            } else {
+                $(this.$el).find('.outer-wrap').css('height', $(this.$el).find('.inn-wrap').height() + 10 + 'px');
+                $(this.$el).addClass('expanded');
+            }
+            this.expanded = !this.expanded;
+        }
+    }
+});
+
+/***/ }),
+/* 111 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, ".com-auto-more {\n  height: 3rem;\n  position: relative;\n  flex-shrink: 0;\n  flex-grow: 10; }\n  .com-auto-more .outer-wrap {\n    height: 3rem;\n    transition: height .3s;\n    z-index: 100;\n    position: absolute;\n    overflow: hidden;\n    width: 100%; }\n  .com-auto-more .inn-wrap {\n    width: 100%;\n    background-color: white;\n    padding: 0 3rem 1rem 1rem; }\n  .com-auto-more .toggle-btn {\n    display: none;\n    position: absolute;\n    z-index: 101; }\n  .com-auto-more.has-overflow .toggle-btn {\n    display: block;\n    position: absolute;\n    right: 1rem;\n    top: 0.7rem; }\n  .com-auto-more.expanded .outer-wrap {\n    overflow: visible;\n    border-top: 1px solid #f2f2f2;\n    box-shadow: 0px 2px 4px #9c9c9c;\n    -moz-box-shadow: 0px 2px 4px #9c9c9c;\n    -webkit-box-shadow: 0px 2px 4px #9c9c9c; }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 112 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)();
+// imports
+
+
+// module
+exports.push([module.i, "@charset \"UTF-8\";\n.no-scroll-bar {\n  -ms-overflow-style: none;\n  overflow: -moz-scrollbars-none; }\n  .no-scroll-bar::-webkit-scrollbar {\n    width: 0;\n    /* 滚动条宽度为0 */\n    height: 0;\n    /* 滚动条高度为0 */\n    display: none;\n    /* 滚动条隐藏 */ }\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 113 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(111);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../../../../../../coblan/webcode/node_modules/css-loader/index.js!../../../../../../../../../coblan/webcode/node_modules/sass-loader/lib/loader.js!./auto_more.scss", function() {
+			var newContent = require("!!../../../../../../../../../coblan/webcode/node_modules/css-loader/index.js!../../../../../../../../../coblan/webcode/node_modules/sass-loader/lib/loader.js!./auto_more.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(112);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(1)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!../../../../../../../../../coblan/webcode/node_modules/css-loader/index.js!../../../../../../../../../coblan/webcode/node_modules/sass-loader/lib/loader.js!./scroll_bar.scss", function() {
+			var newContent = require("!!../../../../../../../../../coblan/webcode/node_modules/css-loader/index.js!../../../../../../../../../coblan/webcode/node_modules/sass-loader/lib/loader.js!./scroll_bar.scss");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);
