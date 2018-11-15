@@ -4500,7 +4500,7 @@ Vue.component('com-auto-more', {
                 $(this.$el).find('.outer-wrap').css('height', '3rem');
                 $(this.$el).removeClass('expanded');
             } else {
-                $(this.$el).find('.outer-wrap').css('height', $(this.$el).find('.inn-wrap').height() + 10 + 'px');
+                $(this.$el).find('.outer-wrap').css('height', $(this.$el).find('.inn-wrap').height() + 20 + 'px');
                 $(this.$el).addClass('expanded');
             }
             this.expanded = !this.expanded;
