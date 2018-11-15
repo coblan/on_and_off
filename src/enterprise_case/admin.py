@@ -1,9 +1,10 @@
 from django.contrib import admin
-from helpers.director.shortcut import TablePage, ModelTable, page_dc, director, ModelFields, RowSearch, SimTable
+from helpers.director.shortcut import TablePage, ModelTable, page_dc, director, ModelFields, RowSearch, SimTable, RowFilter, SelectSearch
 from .models import TTaskinfo, Enterprise
 from helpers.maintenance.update_static_timestamp import js_stamp_dc
 from .port.enterpris_info import enterprise_list
 from . import admin_enterprise
+from .pull_task import pull_task
 # Register your models here.
 
 class CasePage(TablePage):
@@ -16,7 +17,7 @@ class CasePage(TablePage):
         pop_edit_field = 'taskid'
         model = TTaskinfo
         exclude = []
-        fields_sort = ['taskid', 'status', 'deptname', 'address', 'description', 'enterpriseinvoledname', 'ENT_NAME', 'discovertime']
+        fields_sort = ['taskid', 'deptname', 'address', 'description', 'enterpriseinvoledname', 'ENT_NAME', 'discovertime']
         
         def inn_filter(self, query): 
             return query.select_related('enterprise')
@@ -54,6 +55,44 @@ class CasePage(TablePage):
             else:
                 dc = {}
             return dc
+        
+        def get_operation(self): 
+            return [
+                {'fun': 'director_call',
+                 'director_name': 'update_case_from_sangao',
+                 'confirm_msg': '确认马上从网格化更新案件吗?',
+                 'label': '从网格化更新案件',
+                 'after_call': 'refresh',
+                 'editor': 'com-op-btn',}, 
+            ]
+        
+        @staticmethod
+        def update_case_from_sangao(): 
+            count = pull_task()
+            return {
+                'msg': '成功新建%s条案件!' % count,
+            }
+        
+        class search(RowSearch):
+            names = ['taskid', 'enterpriseinvoledname']
+            
+        
+        class filters(RowFilter):
+            names = ['deptname']
+            def getExtraHead(self): 
+                options = [{'value': x.ENT_NAME, 'label': x.ENT_NAME} for x in Enterprise.objects.all() ]
+                return [
+                    {'name': 'ENT_NAME', 'label': '企业名称','editor': 'com-filter-select','options': options,}
+                ]
+            
+            def clean_query(self, query): 
+                if self.kw.get('ENT_NAME'):
+                    return query.filter(enterprise__ENT_NAME = self.kw.get('ENT_NAME'))
+                else:
+                    return query
+            
+            
+            
 
 class CaseForm(ModelFields):
     field_sort = ['taskid', 'enterpriseinvoledname', 'ENT_NAME', 'DOM', 'REG_NO', 'UNI_SCID', 'NEIGHBOR']
@@ -67,9 +106,15 @@ class CaseForm(ModelFields):
             {'name': 'ENT_NAME','label': '企业名称', 'editor': 'linetext','readonly': True,}, 
             {'name': 'DOM','label': '经营地址', 'editor': 'linetext', 'readonly': True,}, 
             {'name': 'REG_NO','label': '企业注册号', 'editor': 'linetext','readonly': True,}, 
-            {'name': 'UNI_SCID','label': '统一社会信用代码', 'editor': 'linetext','readonly': True,}, 
+            {'name': 'UNI_SCID','label': '统一社会<br>信用代码', 'editor': 'linetext','readonly': True,}, 
             {'name': 'NEIGHBOR','label': '街道', 'editor': 'linetext','readonly': True,}
         ]
+    
+    def dict_row(self, inst): 
+        return {
+            'ENT_NAME': inst.enterprise.ENT_NAME,
+        }
+    
     def dict_head(self, head): 
         if head['name'] =='enterpriseinvoledname':
             head['editor'] = 'com-field-related-query'
@@ -112,21 +157,33 @@ class CaseSelect(SimTable):
             'heads': self.get_heads(),
             'row_filters': [self.row_search.get_context()],
             'director_name': self.get_director_name(), 
+            'selectable': False,
         })
         return ctx
     
-    def get_data_context(self):
-        ctx = super().get_data_context()
-        return {
-            'rows': self.get_rows(),
-            'row_pages' : self.pagenum.get_context(),  
-            'search_args':self.search_args
-        }
+    #def get_data_context(self):
+        #ctx = super().get_data_context()
+        #rows =  self.get_rows()
+        #table_layout = self.getTableLayout(rows)
+        #return {
+            #'rows': rows,
+            #'table_layout': table_layout,
+            #'row_pages' : self.getRowPages(), #self.pagenum.get_context(),  
+            #'search_args':self.search_args, 
+            #'footer': self.footer,
+            #'parents': self.getParents(),
+        #}
+    
+        #return {
+            #'rows': self.get_rows(),
+            #'row_pages' : self.pagenum.get_context(),  
+            #'search_args':self.search_args
+        #}
     
     def get_heads(self): 
         return [
-            {'name': 'ENT_NAME','label': '企业名称','editor':'com-table-foreign-click-select' ,}, 
-            {'name': 'DOM','label': '企业地址',}, 
+            {'name': 'ENT_NAME','label': '企业名称','editor':'com-table-foreign-click-select' ,'width': 200,}, 
+            {'name': 'DOM','label': '企业地址','width': 250,}, 
             #{'name': 'UNI_SCID','label': '统一社会信用代码',}
         ]
     
@@ -154,7 +211,8 @@ class CaseSelect(SimTable):
 director.update({
     'enterprise_case.caseadmin': CasePage.tableCls,
     'enterprise_case.caseadmin.edit': CaseForm,
-    'enterprise_case.caseinfo.table.select': CaseSelect
+    'enterprise_case.caseinfo.table.select': CaseSelect, 
+    'update_case_from_sangao': CasePage.tableCls.update_case_from_sangao,
 })
 
 page_dc.update({

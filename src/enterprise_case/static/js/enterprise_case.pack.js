@@ -75,7 +75,7 @@
 
 Vue.component('com-field-taskid', {
     props: ['head', 'row'],
-    template: '<div>\n    <a v-text="row[head.name]" class="clickable" :href="mylink" target="_blank"></a>\n    </div>',
+    template: '<div>\n    <a  class="clickable" :href="mylink" target="_blank">\n        <span v-text="row[head.name]"></span><span>(\u70B9\u51FB\u5B8C\u5584\u4F01\u4E1A\u4FE1\u606F)</span>\n    </a>\n    </div>',
     computed: {
         mylink: function mylink() {
             var taskid = this.row[this.head.name];

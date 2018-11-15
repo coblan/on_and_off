@@ -12,7 +12,7 @@ class PcMenu(BaseEngine):
     brand='事中事后'
     mini_brand='系统'
     menu=[
-        {'label':'主页','url':page('home'),'icon':fa('fa-home'), }, 
+        #{'label':'主页','url':page('home'),'icon':fa('fa-home'), }, 
         {'label':'案件管理','icon':fa('fa-user-secret'),
          'submenu':[
              {'label':'案件列表','url':page('enterprise_case.caseadmin')},
@@ -30,6 +30,7 @@ class PcMenu(BaseEngine):
     def custome_ctx(self, ctx):
         ctx['js_stamp']=js_stamp
         ctx['fast_config_panel']=True
+        ctx['menu_expand_all'] = True
 
         return ctx        
  

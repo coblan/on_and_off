@@ -31,6 +31,9 @@ class EnterprisePage(TablePage):
             }
             if dc.get(head['name']):
                 head['width'] = dc.get(head['name'])    
+            if head['name'] == 'ENT_NAME':
+                head['editor'] = 'com-table-jump-link'
+                head['link_field'] = '_case_list'
             return head
         
         def inn_filter(self, query): 
@@ -39,6 +42,7 @@ class EnterprisePage(TablePage):
         def dict_row(self, inst): 
         
             return {
+                '_case_list': '/pc/enterprise_case.caseadmin?ENT_NAME=%s' % inst.ENT_NAME,
                 'nums_task': inst.nums_task,
                 'nums_finish_task': inst.nums_finish_task,
             }

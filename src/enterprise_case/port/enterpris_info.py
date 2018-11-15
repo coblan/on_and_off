@@ -7,6 +7,7 @@ from django.conf import settings
 proxies = getattr(settings,'DATA_PROXY',{})
 
 def enterprise_list(name): 
+    """根据名字name从api获取企业列表"""
     dc = {
         'USER_NAME': 'wangge',
         'PASSWD': '96e79218965eb72c92a549dd5a330112',
@@ -29,14 +30,14 @@ def enterprise_list(name):
             out = 'error code is %s'%rt.status_code
     except requests.exceptions.RequestException as e:
         out = 'Exception : %s'%str(e)
-    
-    bb = rt_dc['RESPONSE']['EntyBasicInfo']
-    if not isinstance(bb, list):
-        out_list = [bb]
-    else:
-        out_list = bb
-    
-    
+    try:
+        bb = rt_dc['RESPONSE']['EntyBasicInfo']
+        if not isinstance(bb, list):
+            out_list = [bb]
+        else:
+            out_list = bb
+    except:
+        raise UserWarning('您输入的企业关键字有误或不在数据库中！')
     return out_list    
 
 #def portRow2modelRow(row): 

@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'call/?$',views.test_post),
     url(r'^pc/([\w\.]+)/?$',PcMenu.as_view(),name=PcMenu.url_name),
     url(r'^d/',include('helpers.director.urls'),name='director'),
-    url(r'^$',RedirectView.as_view(url='/pc/home')) ,
+    url(r'^$',RedirectView.as_view(url='/pc/enterprise_case.caseadmin')) ,
 ]
 
 if settings.DEBUG:

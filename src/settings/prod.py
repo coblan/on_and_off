@@ -17,6 +17,8 @@ DATABASES = {
 #} 
 
 SANGO_BRIDGE='http://12.110.185.17:8499'
+SANGO_BRIDGE='http://10.231.18.23:8499'
+
 
 INFO_SERVICE = 'http://10.235.243.190:8006/manainf/services/infoService/getEntyBasicInfoList' # getEntyBasicInfo'
 
