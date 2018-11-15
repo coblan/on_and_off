@@ -21,7 +21,7 @@ def pull_task(start = None, end = None):
     if not start:
         lastone = TTaskinfo.objects.order_by('-discovertime').first()
         if lastone:
-            start = str(lastone.discovertime)  #[:10]
+            start = str(lastone.discovertime)[:10]
         else:
             start = today_str[:10]
     if not end:

@@ -100,6 +100,11 @@ class CaseForm(ModelFields):
         model = TTaskinfo
         exclude = []
     
+    def clean_dict(self, dc): 
+        for k in dc:
+            if dc[k] == None:
+                dc[k] = ''
+        return dc
     
     def getExtraHeads(self): 
         return [
