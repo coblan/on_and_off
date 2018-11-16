@@ -4,28 +4,39 @@ from __future__ import unicode_literals
 
 from helpers.director.shortcut import page_dc
 from helpers.director.engine import BaseEngine,page,fa
-
+from django.contrib.auth.models import User, Group
+from helpers.director.engine import BaseEngine, page, fa, can_list, can_touch
 from helpers.maintenance.update_static_timestamp import js_stamp
+from . import permit
+from enterprise_case.models import Enterprise, TTaskinfo
 
 class PcMenu(BaseEngine):
     url_name='EnterpriseCase'
     brand='事中事后'
     mini_brand='系统'
-    menu=[
-        #{'label':'主页','url':page('home'),'icon':fa('fa-home'), }, 
-        {'label':'案件管理','icon':fa('fa-user-secret'),
-         'submenu':[
-             {'label':'案件列表','url':page('enterprise_case.caseadmin')},
-             #{'label':'案件走势','url':page('inspector.inspector')},
-
-             ]},
-         {'label':'重点监管','icon':fa('fa-user-secret'), 
-          'submenu':[
-             {'label':'企业监管','url':page('Enterprise.table')},
-             ]},
-         
-         
-    ]
+    
+    @property
+    def menu(self): 
+        crt_user = self.request.user
+        menu=[
+            #{'label':'主页','url':page('home'),'icon':fa('fa-home'), }, 
+            {'label':'案件管理','icon':fa('fa-user-secret'),
+             'submenu':[
+                 {'label':'案件列表','url':page('enterprise_case.caseadmin'), 'visible': can_touch(TTaskinfo, crt_user), },
+                 #{'label':'案件走势','url':page('inspector.inspector')},
+    
+                 ]},
+             {'label':'重点监管','icon':fa('fa-user-secret'), 
+              'submenu':[
+                 {'label':'企业监管','url':page('Enterprise.table'), 'visible': can_touch(Enterprise, crt_user),},
+                 ]},
+             {'label': '系统管理', 'icon': fa('fa-user'), 'visible': True,
+              'submenu': [
+                  {'label':'用户', 'url': page('jb_user'), 'visible': can_touch(User, crt_user)},
+                  {'label': '权限组', 'url': page('jb_group'), 'visible': can_touch(Group, crt_user)},
+                 ]},
+        ]
+        return menu
     
     def custome_ctx(self, ctx):
         ctx['js_stamp']=js_stamp

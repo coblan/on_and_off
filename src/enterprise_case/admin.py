@@ -5,6 +5,9 @@ from helpers.maintenance.update_static_timestamp import js_stamp_dc
 from .port.enterpris_info import enterprise_list
 from . import admin_enterprise
 from .pull_task import pull_task
+from . import permit
+from helpers.director.access.permit import user_permit_names
+import re
 # Register your models here.
 
 class CasePage(TablePage):
@@ -19,8 +22,20 @@ class CasePage(TablePage):
         exclude = []
         fields_sort = ['taskid', 'deptname', 'address', 'description', 'enterpriseinvoledname', 'ENT_NAME', 'discovertime']
         
+        #def inn_filter(self, query): 
+            #return query.select_related('enterprise')
         def inn_filter(self, query): 
-            return query.select_related('enterprise')
+            if self.crt_user.is_superuser:
+                return query
+            else:
+                permit_names = user_permit_names(self.crt_user)
+                code_list = []
+                for name in permit_names:
+                    mt = re.search('^street\.(\d+)\.case$', name)
+                    if mt:
+                        code_list.append(mt.group(1))
+                return query.filter(streetcode__in = code_list)
+        
         
         def getExtraHead(self): 
             return [
